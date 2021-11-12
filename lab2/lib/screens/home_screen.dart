@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lab2/utils/card_types.dart';
 import 'package:lab2/widgets/credit_card.dart';
 import 'package:lab2/widgets/credit_card_form.dart';
 
@@ -10,11 +11,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String cardNumber = "";
+  String cardNumber = "#### #### #### ####";
+  CardTypes cardType = CardTypes.visa;
   final cardNumberController = TextEditingController();
+  final cardHolderController = TextEditingController();
+  final cardCVVController = TextEditingController();
+
+  void _updateCardType(String cardNumber) {
+    RegExp visa = RegExp(r'^4');
+    RegExp mastercard = RegExp(r'^5');
+    RegExp discover = RegExp(r'^6');
+    RegExp amex = RegExp(r'^3(4|7)');
+    if (visa.hasMatch(cardNumber)) {
+      cardType = CardTypes.visa;
+      return;
+    } else if (mastercard.hasMatch(cardNumber)) {
+      cardType = CardTypes.masterCard;
+      return;
+    } else if (discover.hasMatch(cardNumber)) {
+      cardType = CardTypes.discover;
+      return;
+    } else if (amex.hasMatch(cardNumber)) {
+      cardType = CardTypes.amex;
+      return;
+    }
+    cardType = CardTypes.visa;
+  }
 
   void _updateCardNumber() {
-    cardNumber = cardNumberController.text;
+    _updateCardType(cardNumberController.text);
+    cardNumber = "#### #### #### ####";
+    cardNumber = cardNumber.substring(cardNumberController.text.length);
+    cardNumber = cardNumberController.text + cardNumber;
     setState(() {});
   }
 
@@ -47,13 +75,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 left: 5,
                 right: 5,
                 child: CreditCardForm(
-                  controller: cardNumberController,
+                  cardNumberController: cardNumberController,
+                  cardCVVController: cardCVVController,
+                  cardHolderController: cardHolderController,
                 ),
               ),
               Positioned(
                 top: 0,
                 child: CreditCard(
                   cardNumber: cardNumber,
+                  cardType: cardType,
                 ),
               ),
             ],

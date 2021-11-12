@@ -1,11 +1,14 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:lab2/utils/card_types.dart';
 
 class CreditCard extends StatefulWidget {
+  final CardTypes cardType;
   final String cardNumber;
   const CreditCard({
     Key? key,
     required this.cardNumber,
+    required this.cardType,
   }) : super(key: key);
 
   @override
@@ -15,6 +18,19 @@ class CreditCard extends StatefulWidget {
 class _CreditCardState extends State<CreditCard> {
   @override
   Widget build(BuildContext context) {
+    String _getCardAsset() {
+      if (widget.cardType == CardTypes.visa) {
+        return 'assets/images/visa.png';
+      } else if (widget.cardType == CardTypes.masterCard) {
+        return 'assets/images/mastercard.png';
+      } else if (widget.cardType == CardTypes.amex) {
+        return 'assets/images/amex.png';
+      } else if (widget.cardType == CardTypes.discover) {
+        return 'assets/images/discover.png';
+      }
+      return 'assets/images/visa.png';
+    }
+
     return FlipCard(
       flipOnTouch: true,
       speed: 5000,
@@ -33,14 +49,93 @@ class _CreditCardState extends State<CreditCard> {
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
-            child: Text(
-              widget.cardNumber,
-              style: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'assets/images/chip.png',
+                          ),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            _getCardAsset(),
+                          ),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    )
+                  ],
+                ),
+              ),
+              Center(
+                child: Text(
+                  widget.cardNumber,
+                  style: const TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Card holder",
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          ),
+                          Text(
+                            "FULL NAME",
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      // Expanded(child: SizedBox()),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Text(
+                            "Expires",
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          ),
+                          Text("Date"),
+                        ],
+                      ),
+                    ]),
+              ),
+            ],
           ),
         ),
       ),
