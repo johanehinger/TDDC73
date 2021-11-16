@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CreditCardForm extends StatefulWidget {
   final TextEditingController cardNumberController;
   final TextEditingController cardHolderController;
   final TextEditingController cardCVVController;
+  final FocusNode cardNumberFocusNode;
+  final FocusNode cardHolderFocusNode;
+  final Function setExpirationMonth;
+  final Function setExpirationYear;
   const CreditCardForm({
     Key? key,
     required this.cardNumberController,
     required this.cardHolderController,
     required this.cardCVVController,
+    required this.cardNumberFocusNode,
+    required this.cardHolderFocusNode,
+    required this.setExpirationMonth,
+    required this.setExpirationYear,
   }) : super(key: key);
 
   @override
@@ -46,9 +53,6 @@ class CardNumberInputFormatter extends TextInputFormatter {
 }
 
 class _CreditCardFormState extends State<CreditCardForm> {
-  String? _chosenMonth;
-  String? _chosenYear;
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -72,6 +76,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   LengthLimitingTextInputFormatter(19)
                 ],
                 controller: widget.cardNumberController,
+                focusNode: widget.cardNumberFocusNode,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -99,6 +104,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(26),
                 ],
+                focusNode: widget.cardHolderFocusNode,
                 controller: widget.cardHolderController,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
@@ -154,18 +160,17 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           ),
                         ),
                       ),
-                      value: _chosenMonth,
                       iconEnabledColor: Colors.black,
                       items: <String>[
-                        '1',
-                        '2',
-                        '3',
-                        '4',
-                        '5',
-                        '6',
-                        '7',
-                        '8',
-                        '9',
+                        '01',
+                        '02',
+                        '03',
+                        '04',
+                        '05',
+                        '06',
+                        '07',
+                        '08',
+                        '09',
                         '10',
                         '11',
                         '12',
@@ -184,7 +189,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       ),
                       onChanged: (String? month) {
                         setState(() {
-                          _chosenMonth = month;
+                          widget.setExpirationMonth(month);
                         });
                       },
                     ),
@@ -210,7 +215,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           ),
                         ),
                       ),
-                      value: _chosenYear,
                       iconEnabledColor: Colors.black,
                       items: <String>[
                         '2021',
@@ -240,7 +244,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       ),
                       onChanged: (String? year) {
                         setState(() {
-                          _chosenYear = year;
+                          widget.setExpirationYear(year);
                         });
                       },
                     ),

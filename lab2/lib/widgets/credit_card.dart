@@ -6,11 +6,20 @@ class CreditCard extends StatefulWidget {
   final CardTypes cardType;
   final String cardNumber;
   final String cardHolder;
+  final String expirationMonth;
+  final String expirationYear;
+  final FocusNode cardNumberFocusNode;
+  final FocusNode cardHolderFocusNode;
+
   const CreditCard({
     Key? key,
     required this.cardNumber,
     required this.cardType,
     required this.cardHolder,
+    required this.cardNumberFocusNode,
+    required this.cardHolderFocusNode,
+    required this.expirationMonth,
+    required this.expirationYear,
   }) : super(key: key);
 
   @override
@@ -95,12 +104,17 @@ class _CreditCardState extends State<CreditCard> {
                 ),
               ),
               Center(
-                child: Text(
-                  widget.cardNumber,
-                  style: const TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                child: GestureDetector(
+                  onTap: () {
+                    widget.cardNumberFocusNode.requestFocus();
+                  },
+                  child: Text(
+                    widget.cardNumber,
+                    style: const TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
               ),
               Expanded(
@@ -111,36 +125,43 @@ class _CreditCardState extends State<CreditCard> {
                       const SizedBox(
                         width: 20,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Card holder",
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.grey),
-                          ),
-                          Text(
-                            widget.cardHolder,
-                            style: const TextStyle(
-                                fontSize: 12.0, color: Colors.white),
-                          ),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          widget.cardHolderFocusNode.requestFocus();
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Card holder",
+                              style:
+                                  TextStyle(fontSize: 12.0, color: Colors.grey),
+                            ),
+                            Text(
+                              widget.cardHolder,
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                       const Expanded(child: SizedBox()),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             "Expires",
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.grey),
                           ),
                           Text(
-                            "MM/YY",
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.white),
+                            widget.expirationMonth +
+                                "/" +
+                                widget.expirationYear,
+                            style: const TextStyle(
+                                fontSize: 12.0, color: Colors.white),
                           ),
                         ],
                       ),

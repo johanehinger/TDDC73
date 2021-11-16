@@ -13,10 +13,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String cardNumber = "#### #### #### ####";
   String cardHolder = "FULL NAME";
+  String expirationMonth = "MM";
+  String expirationYear = "YY";
   CardTypes cardType = CardTypes.visa;
   final cardNumberController = TextEditingController();
   final cardHolderController = TextEditingController();
   final cardCVVController = TextEditingController();
+
+  final cardNumberFocusNode = FocusNode();
+  final cardHolderFocusNode = FocusNode();
 
   void _updateCardType(String cardNumber) {
     RegExp visa = RegExp(r'^4');
@@ -54,6 +59,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void _setExpirationMonth(String? month) {
+    expirationMonth = month ?? "MM";
+    setState(() {});
+  }
+
+  void _setExpirationYear(String? year) {
+    expirationYear = year ?? "YY";
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,14 +103,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     cardNumberController: cardNumberController,
                     cardCVVController: cardCVVController,
                     cardHolderController: cardHolderController,
+                    cardNumberFocusNode: cardNumberFocusNode,
+                    cardHolderFocusNode: cardHolderFocusNode,
+                    setExpirationMonth: _setExpirationMonth,
+                    setExpirationYear: _setExpirationYear,
                   ),
                 ),
                 Positioned(
                   top: 0,
                   child: CreditCard(
+                    expirationYear: expirationYear,
+                    expirationMonth: expirationMonth,
                     cardNumber: cardNumber,
                     cardType: cardType,
                     cardHolder: cardHolder,
+                    cardNumberFocusNode: cardNumberFocusNode,
+                    cardHolderFocusNode: cardHolderFocusNode,
                   ),
                 ),
               ],
