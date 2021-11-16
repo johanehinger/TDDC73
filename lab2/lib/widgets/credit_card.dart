@@ -8,18 +8,22 @@ class CreditCard extends StatefulWidget {
   final String cardHolder;
   final String expirationMonth;
   final String expirationYear;
+  final String cardVV;
   final FocusNode cardNumberFocusNode;
   final FocusNode cardHolderFocusNode;
+  final FocusNode cardCVVFocusNode;
 
   const CreditCard({
     Key? key,
     required this.cardNumber,
     required this.cardType,
     required this.cardHolder,
+    required this.cardVV,
     required this.cardNumberFocusNode,
     required this.cardHolderFocusNode,
     required this.expirationMonth,
     required this.expirationYear,
+    required this.cardCVVFocusNode,
   }) : super(key: key);
 
   @override
@@ -188,6 +192,78 @@ class _CreditCardState extends State<CreditCard> {
               image: AssetImage('assets/images/2.jpeg'),
               fit: BoxFit.cover,
             ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Center(
+                  child: Container(
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 12.0),
+                child: Text(
+                  "CVV",
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  widget.cardCVVFocusNode.requestFocus();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(widget.cardVV),
+                        const SizedBox(
+                          width: 8,
+                        )
+                      ],
+                    ),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            _getCardAsset(),
+                          ),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 12,
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

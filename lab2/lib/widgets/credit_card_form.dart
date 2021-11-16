@@ -7,6 +7,7 @@ class CreditCardForm extends StatefulWidget {
   final TextEditingController cardCVVController;
   final FocusNode cardNumberFocusNode;
   final FocusNode cardHolderFocusNode;
+  final FocusNode cardCVVFocusNode;
   final Function setExpirationMonth;
   final Function setExpirationYear;
   const CreditCardForm({
@@ -16,6 +17,7 @@ class CreditCardForm extends StatefulWidget {
     required this.cardCVVController,
     required this.cardNumberFocusNode,
     required this.cardHolderFocusNode,
+    required this.cardCVVFocusNode,
     required this.setExpirationMonth,
     required this.setExpirationYear,
   }) : super(key: key);
@@ -254,7 +256,12 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4)
+                      ],
                       controller: widget.cardCVVController,
+                      focusNode: widget.cardCVVFocusNode,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         contentPadding: const EdgeInsets.all(5),
@@ -279,10 +286,13 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 height: 20,
               ),
               SizedBox(
-                  height: 45,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {}, child: const Text("Submit")))
+                height: 45,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text("Submit"),
+                ),
+              ),
             ],
           ),
         ),

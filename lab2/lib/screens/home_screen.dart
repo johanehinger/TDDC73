@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String cardHolder = "FULL NAME";
   String expirationMonth = "MM";
   String expirationYear = "YY";
+  String cardCVV = "";
   CardTypes cardType = CardTypes.visa;
   final cardNumberController = TextEditingController();
   final cardHolderController = TextEditingController();
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final cardNumberFocusNode = FocusNode();
   final cardHolderFocusNode = FocusNode();
+  final cardCVVFocusNode = FocusNode();
 
   void _updateCardType(String cardNumber) {
     RegExp visa = RegExp(r'^4');
@@ -59,6 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void _updateCVV() {
+    cardCVV = cardCVVController.text;
+    setState(() {});
+  }
+
   void _setExpirationMonth(String? month) {
     expirationMonth = month ?? "MM";
     setState(() {});
@@ -74,11 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     cardNumberController.addListener(_updateCardNumber);
     cardHolderController.addListener(_updateCardHolder);
+    cardCVVController.addListener(_updateCVV);
   }
 
   @override
   void dispose() {
     cardNumberController.dispose();
+    cardHolderController.dispose();
+    cardCVVController.dispose();
     super.dispose();
   }
 
@@ -105,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     cardHolderController: cardHolderController,
                     cardNumberFocusNode: cardNumberFocusNode,
                     cardHolderFocusNode: cardHolderFocusNode,
+                    cardCVVFocusNode: cardCVVFocusNode,
                     setExpirationMonth: _setExpirationMonth,
                     setExpirationYear: _setExpirationYear,
                   ),
@@ -112,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Positioned(
                   top: 0,
                   child: CreditCard(
+                    cardVV: cardCVV,
                     expirationYear: expirationYear,
                     expirationMonth: expirationMonth,
                     cardNumber: cardNumber,
@@ -119,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     cardHolder: cardHolder,
                     cardNumberFocusNode: cardNumberFocusNode,
                     cardHolderFocusNode: cardHolderFocusNode,
+                    cardCVVFocusNode: cardCVVFocusNode,
                   ),
                 ),
               ],
