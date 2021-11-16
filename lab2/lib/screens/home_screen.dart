@@ -1,3 +1,4 @@
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lab2/utils/card_types.dart';
 import 'package:lab2/widgets/credit_card.dart';
@@ -24,6 +25,27 @@ class _HomeScreenState extends State<HomeScreen> {
   final cardNumberFocusNode = FocusNode();
   final cardHolderFocusNode = FocusNode();
   final cardCVVFocusNode = FocusNode();
+  final expirationMonthFocusNode = FocusNode();
+  final expirationYearFocusNode = FocusNode();
+
+  final flipCardController = FlipCardController();
+
+  void _flipCard([bool focus = false]) {
+    debugPrint("in flipcard");
+    if (cardCVVFocusNode.hasFocus && flipCardController.state!.isFront) {
+      flipCardController.toggleCard();
+      return;
+    } else if ((cardNumberFocusNode.hasFocus || cardHolderFocusNode.hasFocus) &&
+        !flipCardController.state!.isFront) {
+      flipCardController.toggleCard();
+      return;
+    }
+    if (focus && !flipCardController.state!.isFront) {
+      flipCardController.toggleCard();
+      return;
+    }
+    return;
+  }
 
   void _updateCardType(String cardNumber) {
     RegExp visa = RegExp(r'^4');
@@ -115,14 +137,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     cardHolderController: cardHolderController,
                     cardNumberFocusNode: cardNumberFocusNode,
                     cardHolderFocusNode: cardHolderFocusNode,
+                    expirationMonthFocusNode: expirationMonthFocusNode,
+                    expirationYearFocusNode: expirationYearFocusNode,
                     cardCVVFocusNode: cardCVVFocusNode,
                     setExpirationMonth: _setExpirationMonth,
                     setExpirationYear: _setExpirationYear,
+                    flipCard: _flipCard,
                   ),
                 ),
                 Positioned(
                   top: 0,
                   child: CreditCard(
+                    expirationMonthFocusNode: expirationMonthFocusNode,
+                    expirationYearFocusNode: expirationYearFocusNode,
                     cardVV: cardCVV,
                     expirationYear: expirationYear,
                     expirationMonth: expirationMonth,
@@ -132,6 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     cardNumberFocusNode: cardNumberFocusNode,
                     cardHolderFocusNode: cardHolderFocusNode,
                     cardCVVFocusNode: cardCVVFocusNode,
+                    flipCardController: flipCardController,
+                    flipCard: _flipCard,
                   ),
                 ),
               ],

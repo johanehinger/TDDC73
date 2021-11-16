@@ -1,4 +1,5 @@
 import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lab2/utils/card_types.dart';
 
@@ -12,6 +13,10 @@ class CreditCard extends StatefulWidget {
   final FocusNode cardNumberFocusNode;
   final FocusNode cardHolderFocusNode;
   final FocusNode cardCVVFocusNode;
+  final FocusNode expirationMonthFocusNode;
+  final FocusNode expirationYearFocusNode;
+  final FlipCardController flipCardController;
+  final Function flipCard;
 
   const CreditCard({
     Key? key,
@@ -21,9 +26,13 @@ class CreditCard extends StatefulWidget {
     required this.cardVV,
     required this.cardNumberFocusNode,
     required this.cardHolderFocusNode,
+    required this.expirationMonthFocusNode,
+    required this.expirationYearFocusNode,
     required this.expirationMonth,
     required this.expirationYear,
     required this.cardCVVFocusNode,
+    required this.flipCardController,
+    required this.flipCard,
   }) : super(key: key);
 
   @override
@@ -47,8 +56,9 @@ class _CreditCardState extends State<CreditCard> {
     }
 
     return FlipCard(
-      flipOnTouch: true,
-      speed: 5000,
+      flipOnTouch: false,
+      controller: widget.flipCardController,
+      speed: 1000,
       front: Card(
         elevation: 20,
         shape: RoundedRectangleBorder(
@@ -150,7 +160,9 @@ class _CreditCardState extends State<CreditCard> {
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
+                      const Expanded(
+                        child: SizedBox(),
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,13 +172,36 @@ class _CreditCardState extends State<CreditCard> {
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.grey),
                           ),
-                          Text(
-                            widget.expirationMonth +
-                                "/" +
-                                widget.expirationYear,
-                            style: const TextStyle(
-                                fontSize: 12.0, color: Colors.white),
-                          ),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  widget.expirationMonthFocusNode
+                                      .requestFocus();
+                                },
+                                child: Text(
+                                  widget.expirationMonth,
+                                  style: const TextStyle(
+                                      fontSize: 12.0, color: Colors.white),
+                                ),
+                              ),
+                              const Text(
+                                "/",
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.white),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  widget.expirationYearFocusNode.requestFocus();
+                                },
+                                child: Text(
+                                  widget.expirationYear,
+                                  style: const TextStyle(
+                                      fontSize: 12.0, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -220,6 +255,7 @@ class _CreditCardState extends State<CreditCard> {
               GestureDetector(
                 onTap: () {
                   widget.cardCVVFocusNode.requestFocus();
+                  widget.flipCard();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),

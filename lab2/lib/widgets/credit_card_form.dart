@@ -7,9 +7,12 @@ class CreditCardForm extends StatefulWidget {
   final TextEditingController cardCVVController;
   final FocusNode cardNumberFocusNode;
   final FocusNode cardHolderFocusNode;
+  final FocusNode expirationMonthFocusNode;
+  final FocusNode expirationYearFocusNode;
   final FocusNode cardCVVFocusNode;
   final Function setExpirationMonth;
   final Function setExpirationYear;
+  final Function flipCard;
   const CreditCardForm({
     Key? key,
     required this.cardNumberController,
@@ -20,6 +23,9 @@ class CreditCardForm extends StatefulWidget {
     required this.cardCVVFocusNode,
     required this.setExpirationMonth,
     required this.setExpirationYear,
+    required this.flipCard,
+    required this.expirationMonthFocusNode,
+    required this.expirationYearFocusNode,
   }) : super(key: key);
 
   @override
@@ -72,6 +78,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
               const Text("Card Number"),
               TextFormField(
+                onChanged: (_) {
+                  widget.flipCard();
+                },
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   CardNumberInputFormatter(),
@@ -103,6 +112,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
               const Text("Card Holder"),
               TextFormField(
+                onChanged: (_) {
+                  widget.flipCard();
+                },
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(26),
                 ],
@@ -146,6 +158,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
+                      focusNode: widget.expirationMonthFocusNode,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         contentPadding: const EdgeInsets.all(5),
@@ -192,6 +205,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       onChanged: (String? month) {
                         setState(() {
                           widget.setExpirationMonth(month);
+                          widget.flipCard(true);
                         });
                       },
                     ),
@@ -201,6 +215,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   ),
                   Expanded(
                     child: DropdownButtonFormField<String>(
+                      focusNode: widget.expirationYearFocusNode,
                       isExpanded: false,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(5),
@@ -247,6 +262,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       onChanged: (String? year) {
                         setState(() {
                           widget.setExpirationYear(year);
+                          widget.flipCard(true);
                         });
                       },
                     ),
@@ -278,6 +294,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           ),
                         ),
                       ),
+                      onChanged: (_) {
+                        widget.flipCard();
+                      },
                     ),
                   ),
                 ],
