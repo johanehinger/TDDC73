@@ -5,10 +5,12 @@ import 'package:lab2/utils/card_types.dart';
 class CreditCard extends StatefulWidget {
   final CardTypes cardType;
   final String cardNumber;
+  final String cardHolder;
   const CreditCard({
     Key? key,
     required this.cardNumber,
     required this.cardType,
+    required this.cardHolder,
   }) : super(key: key);
 
   @override
@@ -103,27 +105,32 @@ class _CreditCardState extends State<CreditCard> {
               ),
               Expanded(
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
                             "Card holder",
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.grey),
                           ),
                           Text(
-                            "FULL NAME",
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.white),
+                            widget.cardHolder,
+                            style: const TextStyle(
+                                fontSize: 12.0, color: Colors.white),
                           ),
                         ],
                       ),
-                      // Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: const [
                           Text(
                             "Expires",
@@ -132,6 +139,9 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           Text("Date"),
                         ],
+                      ),
+                      const SizedBox(
+                        width: 20,
                       ),
                     ]),
               ),

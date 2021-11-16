@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String cardNumber = "#### #### #### ####";
+  String cardHolder = "FULL NAME";
   CardTypes cardType = CardTypes.visa;
   final cardNumberController = TextEditingController();
   final cardHolderController = TextEditingController();
@@ -46,10 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void _updateCardHolder() {
+    cardHolder = cardHolderController.text.isEmpty
+        ? "FULL NAME"
+        : cardHolderController.text.toUpperCase();
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     cardNumberController.addListener(_updateCardNumber);
+    cardHolderController.addListener(_updateCardHolder);
   }
 
   @override
@@ -85,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: CreditCard(
                   cardNumber: cardNumber,
                   cardType: cardType,
+                  cardHolder: cardHolder,
                 ),
               ),
             ],

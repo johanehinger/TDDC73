@@ -91,6 +91,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
               TextFormField(
                 controller: widget.cardHolderController,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   label: const Text("Card Holder"),
