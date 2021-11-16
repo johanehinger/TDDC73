@@ -71,33 +71,35 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SizedBox(
-          height: 600,
-          child: Stack(
-            alignment: Alignment.center,
-            textDirection: TextDirection.rtl,
-            fit: StackFit.loose,
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Positioned(
-                top: 120,
-                left: 5,
-                right: 5,
-                child: CreditCardForm(
-                  cardNumberController: cardNumberController,
-                  cardCVVController: cardCVVController,
-                  cardHolderController: cardHolderController,
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: 600,
+            child: Stack(
+              alignment: Alignment.center,
+              textDirection: TextDirection.rtl,
+              fit: StackFit.loose,
+              clipBehavior: Clip.hardEdge,
+              children: [
+                Positioned(
+                  top: 120,
+                  left: 5,
+                  right: 5,
+                  child: CreditCardForm(
+                    cardNumberController: cardNumberController,
+                    cardCVVController: cardCVVController,
+                    cardHolderController: cardHolderController,
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 0,
-                child: CreditCard(
-                  cardNumber: cardNumber,
-                  cardType: cardType,
-                  cardHolder: cardHolder,
+                Positioned(
+                  top: 0,
+                  child: CreditCard(
+                    cardNumber: cardNumber,
+                    cardType: cardType,
+                    cardHolder: cardHolder,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

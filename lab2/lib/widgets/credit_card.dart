@@ -130,14 +130,18 @@ class _CreditCardState extends State<CreditCard> {
                       const Expanded(child: SizedBox()),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
                             "Expires",
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.grey),
                           ),
-                          Text("Date"),
+                          Text(
+                            "MM/YY",
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.white),
+                          ),
                         ],
                       ),
                       const SizedBox(

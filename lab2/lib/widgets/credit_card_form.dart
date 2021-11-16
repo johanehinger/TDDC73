@@ -54,15 +54,17 @@ class _CreditCardFormState extends State<CreditCardForm> {
     return Card(
       elevation: 10,
       child: Container(
-        height: 350,
+        height: 420,
         padding: const EdgeInsets.all(24.0),
         child: Form(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 60.0,
+                height: 95.0,
               ),
+              const Text("Card Number"),
               TextFormField(
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -73,7 +75,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  label: const Text("Card Number"),
+                  // label: const Text("Card Number"),
                   contentPadding: const EdgeInsets.all(5),
                   enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(
@@ -89,12 +91,18 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 8,
+              ),
+              const Text("Card Holder"),
               TextFormField(
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(26),
+                ],
                 controller: widget.cardHolderController,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  label: const Text("Card Holder"),
                   contentPadding: const EdgeInsets.all(5),
                   enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(
@@ -109,6 +117,20 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: const [
+                  Expanded(
+                    child: Text("Expiration Date"),
+                  ),
+                  Expanded(
+                    child: SizedBox(),
+                  ),
+                  Expanded(child: Text("CVV"))
+                ],
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,7 +140,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        label: const Text("Expiration Date"),
                         contentPadding: const EdgeInsets.all(5),
                         enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
@@ -232,7 +253,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       controller: widget.cardCVVController,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        label: const Text("CVV"),
                         contentPadding: const EdgeInsets.all(5),
                         enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
@@ -251,6 +271,14 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                  height: 45,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: () {}, child: const Text("Submit")))
             ],
           ),
         ),
