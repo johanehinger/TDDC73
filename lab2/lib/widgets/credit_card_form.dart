@@ -208,6 +208,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           widget.flipCard(true);
                         });
                       },
+                      onTap: () {
+                        widget.expirationMonthFocusNode.requestFocus();
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -264,6 +267,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           widget.setExpirationYear(year);
                           widget.flipCard(true);
                         });
+                      },
+                      onTap: () {
+                        widget.expirationYearFocusNode.requestFocus();
                       },
                     ),
                   ),

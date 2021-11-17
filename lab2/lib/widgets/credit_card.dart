@@ -2,6 +2,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lab2/utils/card_types.dart';
+import 'dart:ui';
 
 class CreditCard extends StatefulWidget {
   final CardTypes cardType;
@@ -75,95 +76,147 @@ class _CreditCardState extends State<CreditCard> {
             ),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            'assets/images/chip.png',
-                          ),
-                          fit: BoxFit.fitWidth,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/chip.png',
                         ),
+                        fit: BoxFit.fitWidth,
                       ),
                     ),
-                    const Expanded(
-                      child: SizedBox(),
-                    ),
-                    Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            _getCardAsset(),
-                          ),
-                          fit: BoxFit.fitWidth,
+                  ),
+                  const Expanded(
+                    child: SizedBox(),
+                  ),
+                  Container(
+                    height: 80,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          _getCardAsset(),
                         ),
+                        fit: BoxFit.fitWidth,
                       ),
                     ),
-                    const SizedBox(
-                      width: 20,
-                    )
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  )
+                ],
               ),
               Center(
                 child: GestureDetector(
                   onTap: () {
                     widget.cardNumberFocusNode.requestFocus();
                   },
-                  child: Text(
-                    widget.cardNumber,
-                    style: const TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                  child: Container(
+                    width: 280,
+                    padding: const EdgeInsets.all(
+                      3.0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                          color: Colors.white,
+                          width: 1.5,
+                          style: widget.cardNumberFocusNode.hasFocus
+                              ? BorderStyle.solid
+                              : BorderStyle.none),
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.cardNumber,
+                        style: const TextStyle(
+                          fontFeatures: [FontFeature.tabularFigures()],
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              Expanded(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      GestureDetector(
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: GestureDetector(
                         onTap: () {
                           widget.cardHolderFocusNode.requestFocus();
                         },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Card holder",
-                              style:
-                                  TextStyle(fontSize: 12.0, color: Colors.grey),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(
+                                color: Colors.white,
+                                width: 1.5,
+                                style: widget.cardHolderFocusNode.hasFocus
+                                    ? BorderStyle.solid
+                                    : BorderStyle.none),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              3.0,
                             ),
-                            Text(
-                              widget.cardHolder,
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.white),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Card holder",
+                                  style: TextStyle(
+                                      fontSize: 12.0, color: Colors.grey),
+                                ),
+                                Text(
+                                  widget.cardHolder,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                      const Expanded(
-                        child: SizedBox(),
+                    ),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(
+                        3.0,
                       ),
-                      Column(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(
+                            color: Colors.white,
+                            width: 1.5,
+                            style: widget.expirationYearFocusNode.hasFocus ||
+                                    widget.expirationMonthFocusNode.hasFocus
+                                ? BorderStyle.solid
+                                : BorderStyle.none),
+                      ),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -178,6 +231,7 @@ class _CreditCardState extends State<CreditCard> {
                                 onTap: () {
                                   widget.expirationMonthFocusNode
                                       .requestFocus();
+                                  setState(() {});
                                 },
                                 child: Text(
                                   widget.expirationMonth,
@@ -193,6 +247,7 @@ class _CreditCardState extends State<CreditCard> {
                               GestureDetector(
                                 onTap: () {
                                   widget.expirationYearFocusNode.requestFocus();
+                                  setState(() {});
                                 },
                                 child: Text(
                                   widget.expirationYear,
@@ -204,11 +259,11 @@ class _CreditCardState extends State<CreditCard> {
                           )
                         ],
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                    ]),
-              ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                  ]),
             ],
           ),
         ),
