@@ -132,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   left: 5,
                   right: 5,
                   child: CreditCardForm(
+                    cardType: cardType,
                     cardNumberController: cardNumberController,
                     cardCVVController: cardCVVController,
                     cardHolderController: cardHolderController,

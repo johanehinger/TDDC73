@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lab2/utils/card_types.dart';
 
 class CreditCardForm extends StatefulWidget {
   final TextEditingController cardNumberController;
@@ -13,6 +14,7 @@ class CreditCardForm extends StatefulWidget {
   final Function setExpirationMonth;
   final Function setExpirationYear;
   final Function flipCard;
+  final CardTypes cardType;
   const CreditCardForm({
     Key? key,
     required this.cardNumberController,
@@ -26,6 +28,7 @@ class CreditCardForm extends StatefulWidget {
     required this.flipCard,
     required this.expirationMonthFocusNode,
     required this.expirationYearFocusNode,
+    required this.cardType,
   }) : super(key: key);
 
   @override
@@ -117,6 +120,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 },
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(26),
+                  FilteringTextInputFormatter.allow(RegExp("[ a-zA-ZåäöÅÄÖ]")),
                 ],
                 focusNode: widget.cardHolderFocusNode,
                 controller: widget.cardHolderController,
@@ -280,7 +284,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     child: TextFormField(
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(4)
+                        widget.cardType == CardTypes.amex
+                            ? LengthLimitingTextInputFormatter(4)
+                            : LengthLimitingTextInputFormatter(3),
                       ],
                       controller: widget.cardCVVController,
                       focusNode: widget.cardCVVFocusNode,
