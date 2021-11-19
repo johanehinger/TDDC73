@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const testGraphQL = """
-query test {
-  search(query: "language:Dart stars:30..40", type: REPOSITORY, first: 10) {
+{
+  search(query: "stars:>10000", type: REPOSITORY, first: 10) {
+    repositoryCount
     edges {
       node {
         ... on Repository {
+          id
           name
+          description
+          stargazers {
+            totalCount
+          }
         }
       }
     }
@@ -15,11 +22,15 @@ query test {
 }
 """;
 
-void main() {
+void main() async {
+  // Load personal github access token.
+  await dotenv.load(fileName: "assets/.env");
+  String accesToken = dotenv.env['githubPersonalAccessToken']!;
+
   final HttpLink httpLink = HttpLink("https://api.github.com/graphql");
 
   final AuthLink authLink = AuthLink(
-    getToken: () async => 'Bearer <mock_token>',
+    getToken: () async => 'Bearer $accesToken',
   );
 
   final Link link = authLink.concat(httpLink);
