@@ -1,26 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-const testGraphQL = """
-{
-  search(query: "stars:>10000", type: REPOSITORY, first: 10) {
-    repositoryCount
-    edges {
-      node {
-        ... on Repository {
-          id
-          name
-          description
-          stargazers {
-            totalCount
-          }
-        }
-      }
-    }
-  }
-}
-""";
+import 'package:lab3/screens/feed_screen.dart';
 
 void main() async {
   // Load personal github access token.
@@ -57,45 +38,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Github GraphQL',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(),
-        body: Query(
-          options: QueryOptions(document: gql(testGraphQL)),
-          builder: (QueryResult result, {fetchMore, refetch}) {
-            if (result.hasException) {
-              debugPrint(result.exception.toString());
-              return Text(result.exception.toString());
-            }
-            if (result.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            var repoList = result.data?['search']['edges'];
-            return Column(
-              children: [
-                const Text("Repos"),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    itemCount: repoList.length,
-                    itemBuilder: (_, index) {
-                      var repo = repoList[index]['node'];
-                      return Text(repo["name"]);
-                    },
-                  ),
-                )
-              ],
-            );
-          },
+        primarySwatch: Colors.grey,
+        textTheme: TextTheme(
+          subtitle2: TextStyle(
+            color: Colors.grey[500],
+          ),
         ),
       ),
+      home: const FeedScreen(),
     );
   }
 }
