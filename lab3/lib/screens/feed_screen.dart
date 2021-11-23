@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:lab3/widgets/list_card.dart';
+import 'package:lab3/widgets/query_list.dart';
 
 const testGraphQL = """
-{
-  search(query: "stars:>10000", type: REPOSITORY, first: 15) {
+query getRepositories(\$query: String!){
+  search(query: \$query, type: REPOSITORY, first: 15) {
     repositoryCount
     edges {
       node {
@@ -22,45 +23,80 @@ const testGraphQL = """
 }
 """;
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
   @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
+  @override
   Widget build(BuildContext context) {
+    String _selectedValue = 'C++';
+    List<String> listOfValue = [
+      'JavaScript',
+      'Python',
+      'Java',
+      'Go',
+      'TypeScript',
+      'C++',
+      'Ruby',
+      'PHP',
+      'C#',
+      'C',
+      'Shell',
+      'Nix',
+      'Scala',
+      'Dart',
+      'Swift',
+      'Rust',
+      'Kotlin',
+      'Groovy',
+      'DM',
+      'Elixir'
+    ];
+
     return Scaffold(
-      appBar: AppBar(),
-      body: Query(
-        options: QueryOptions(document: gql(testGraphQL)),
-        builder: (QueryResult result, {fetchMore, refetch}) {
-          if (result.hasException) {
-            debugPrint(result.exception.toString());
-            return Center(
-              child: Text(
-                result.exception.toString(),
+        appBar: AppBar(
+          actions: [
+            Expanded(
+              child: DropdownButtonFormField(
+                value: _selectedValue,
+                hint: const Text(
+                  'choose one',
+                ),
+                isExpanded: true,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValue = value.toString();
+                  });
+                },
+                onSaved: (value) {
+                  setState(() {
+                    _selectedValue = value.toString();
+                  });
+                },
+                items: listOfValue.map((String val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    child: Text(
+                      val,
+                    ),
+                  );
+                }).toList(),
               ),
-            );
-          }
-          if (result.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          var repoList = result.data?['search']['edges'];
-          return ListView.builder(
-            itemCount: repoList.length,
-            itemBuilder: (_, index) {
-              var repo = repoList[index]['node'];
-              return ListCard(
-                title: repo['name'],
-                subtitle: repo['nameWithOwner'],
-                description: repo['description'],
-                stargazerCount: repo['stargazerCount'],
-                forkCount: repo['forkCount'],
-              );
-            },
-          );
-        },
-      ),
-    );
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+                child: QueryList(
+              selectedValue: _selectedValue,
+              testGraphQL: testGraphQL,
+            ))
+          ],
+        ));
   }
 }
