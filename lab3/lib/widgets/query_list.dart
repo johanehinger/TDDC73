@@ -12,40 +12,74 @@ class QueryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Query(
-        options: QueryOptions(
-          document: gql(testGraphQL),
-          variables: {"query": "stars:>100 languages:" + selectedValue},
-        ),
-        builder: (QueryResult result,
-            {VoidCallback? refetch, FetchMore? fetchMore}) {
-          if (result.hasException) {
-            debugPrint(result.exception.toString());
-            return Center(
-              child: Text(
-                result.exception.toString(),
-              ),
-            );
-          }
-          if (result.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          var repoList = result.data?['search']['edges'];
-          return ListView.builder(
-            itemCount: repoList.length,
-            itemBuilder: (_, index) {
-              var repo = repoList[index]['node'];
-              return ListCard(
-                title: repo['name'],
-                subtitle: repo['nameWithOwner'],
-                description: repo['description'],
-                stargazerCount: repo['stargazerCount'],
-                forkCount: repo['forkCount'],
-              );
-            },
+      options: QueryOptions(
+        document: gql(testGraphQL),
+        variables: {
+          "query": "stars:>100 languages:" + selectedValue,
+          "cursor": null
+        },
+      ),
+      builder: (QueryResult result,
+          {VoidCallback? refetch, FetchMore? fetchMore}) {
+        if (result.hasException) {
+          debugPrint(result.exception.toString());
+          return Center(
+            child: Text(
+              result.exception.toString(),
+            ),
           );
-        });
+        }
+        if (result.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final repoList = result.data?['search']['edges'];
+
+        final Map pageInfo = result.data!['search']['pageInfo'];
+        final String? endCursor = pageInfo['endCursor'];
+
+        final fetchMoreOptions = FetchMoreOptions(
+          variables: {
+            "query": "stars:>100 languages:" + selectedValue,
+            'cursor': endCursor
+          },
+          updateQuery: (previousResultData, fetchMoreResultData) {
+            final repos = [
+              ...previousResultData!['search']['edges'],
+              ...fetchMoreResultData!['search']['edges']
+            ];
+            fetchMoreResultData['search']['edges'] = repos;
+
+            return fetchMoreResultData;
+          },
+        );
+
+        return ListView.builder(
+          itemCount: repoList.length + 1,
+          itemBuilder: (_, index) {
+            if (index == repoList.length) {
+              return pageInfo['hasNextPage']
+                  ? ElevatedButton(
+                      onPressed: () {
+                        fetchMore!(fetchMoreOptions);
+                      },
+                      child: const Text("Load More"),
+                    )
+                  : const SizedBox();
+            }
+            var repo = repoList[index]['node'];
+            return ListCard(
+              title: repo['name'],
+              subtitle: repo['nameWithOwner'],
+              description: repo['description'],
+              stargazerCount: repo['stargazerCount'],
+              forkCount: repo['forkCount'],
+            );
+          },
+        );
+      },
+    );
   }
 }

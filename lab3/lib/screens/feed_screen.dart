@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:lab3/widgets/list_card.dart';
 import 'package:lab3/widgets/query_list.dart';
 
 const testGraphQL = """
-query getRepositories(\$query: String!){
-  search(query: \$query, type: REPOSITORY, first: 15) {
+query getRepositories(\$query: String!, \$cursor: String){
+  search(query: \$query, type: REPOSITORY, first: 10, after: \$cursor) {
     repositoryCount
     edges {
       node {
@@ -18,6 +16,10 @@ query getRepositories(\$query: String!){
           stargazerCount
         }
       }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
     }
   }
 }
