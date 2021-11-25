@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
 import 'list_card.dart';
 
 class QueryList extends StatelessWidget {
@@ -16,7 +15,6 @@ class QueryList extends StatelessWidget {
         options: QueryOptions(
           document: gql(testGraphQL),
           variables: {"query": "stars:>100 languages:" + selectedValue},
-          pollInterval: Duration(seconds: 5),
         ),
         builder: (QueryResult result,
             {VoidCallback? refetch, FetchMore? fetchMore}) {

@@ -31,9 +31,9 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+  String _selectedValue = 'JavaScript';
   @override
   Widget build(BuildContext context) {
-    String _selectedValue = 'C++';
     List<String> listOfValue = [
       'JavaScript',
       'Python',
