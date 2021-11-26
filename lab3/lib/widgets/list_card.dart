@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:lab3/models/repository_screen_arguments.dart';
 
 class ListCard extends StatelessWidget {
-  final String title;
+  final String name;
   final String subtitle;
   final String description;
   final int stargazerCount;
   final int forkCount;
   final String license;
+  final String owner;
+  final int branches;
+  final String mainRefName;
   const ListCard({
     Key? key,
-    required this.title,
+    required this.name,
     required this.subtitle,
     required this.description,
     required this.stargazerCount,
     required this.forkCount,
     required this.license,
+    required this.owner,
+    required this.branches,
+    required this.mainRefName,
   }) : super(key: key);
 
   @override
@@ -26,11 +32,12 @@ class ListCard extends StatelessWidget {
           context,
           '/repo',
           arguments: RepositoryScreenArguments(
-            title: title,
+            name: name,
             description: description,
             license: license == "NOASSERTION" ? "No license" : license,
-            commits: 220.toString(),
-            branches: 5.toString(),
+            branches: branches.toString(),
+            owner: owner,
+            mainRefName: mainRefName,
           ),
         );
       },
@@ -42,7 +49,7 @@ class ListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                name,
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text(

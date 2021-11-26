@@ -6,6 +6,8 @@ class Repository {
   final int forkCount;
   final String license;
   final String mainRefName;
+  final String owner;
+  final int branches;
 
   Repository({
     required this.name,
@@ -15,5 +17,7 @@ class Repository {
     required this.forkCount,
     required this.license,
     required this.mainRefName,
+    required this.owner,
+    required this.branches,
   });
 }

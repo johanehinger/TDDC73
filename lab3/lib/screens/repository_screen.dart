@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:lab3/models/repository_screen_arguments.dart';
+import 'package:lab3/widgets/repository.dart';
 
 const testGraphQL = """
-query getRepositort(\$owner: String!, \$name: String!, \$mainRefName: String?){
+query getRepository(\$owner: String!, \$name: String!, \$mainRefName: String!){
 repository(owner: \$owner, name: \$name) {
     object(expression: \$mainRefName) {
       ... on Commit {
@@ -23,7 +24,6 @@ class RepositoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as RepositoryScreenArguments;
-    // return Query(options: options, builder: builder)
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -33,41 +33,42 @@ class RepositoryScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(
-              args.title,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text(
-              args.description,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text("License"),
-                Text(args.license),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text("Commits"),
-                Text(args.commits),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text("Branches"),
-                Text(args.branches),
-              ],
-            ),
-          ],
+      body: Query(
+        options: QueryOptions(
+          document: gql(testGraphQL),
+          variables: {
+            "owner": args.owner,
+            "name": args.name,
+            "mainRefName": args.mainRefName,
+          },
         ),
+        builder: (QueryResult result,
+            {VoidCallback? refetch, FetchMore? fetchMore}) {
+          if (result.hasException) {
+            debugPrint(result.exception.toString());
+            return Center(
+              child: Text(
+                result.exception.toString(),
+              ),
+            );
+          }
+          if (result.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          int commits =
+              result.data?['repository']['object']['history']['totalCount'];
+
+          return Repository(
+            name: args.name,
+            description: args.description,
+            license: args.license,
+            commits: commits.toString(),
+            branches: args.branches,
+          );
+        },
       ),
     );
   }

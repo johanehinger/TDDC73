@@ -49,6 +49,8 @@ class QueryList extends StatelessWidget {
                     ? "No license"
                     : data['node']['licenseInfo']['spdxId'],
                 mainRefName: data['node']['defaultBranchRef']['name'],
+                owner: data['node']['owner']['login'],
+                branches: data['node']['refs']['totalCount'],
               );
             },
           ),
@@ -89,12 +91,15 @@ class QueryList extends StatelessWidget {
             final repo = repoList[index];
 
             return ListCard(
-              title: repo.name,
+              name: repo.name,
               subtitle: repo.nameWithOwner,
               description: repo.description,
               stargazerCount: repo.stargazerCount,
               forkCount: repo.forkCount,
               license: repo.license,
+              owner: repo.owner,
+              branches: repo.branches,
+              mainRefName: repo.mainRefName,
             );
           },
         );

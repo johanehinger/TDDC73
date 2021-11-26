@@ -22,6 +22,9 @@ query getRepositories(\$query: String!, \$cursor: String){
           refs(refPrefix: "refs/heads/") {
             totalCount
           }
+          owner {
+            login
+          }
         }
       }
     }
