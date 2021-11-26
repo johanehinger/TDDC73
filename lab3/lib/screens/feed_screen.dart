@@ -8,12 +8,20 @@ query getRepositories(\$query: String!, \$cursor: String){
     edges {
       node {
         ... on Repository {
-          id
           name
           nameWithOwner
           description
           forkCount
           stargazerCount
+          licenseInfo {
+            spdxId
+          }
+          defaultBranchRef {
+            name
+          }
+          refs(refPrefix: "refs/heads/") {
+            totalCount
+          }
         }
       }
     }
@@ -60,45 +68,47 @@ class _FeedScreenState extends State<FeedScreen> {
     ];
 
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            Expanded(
-              child: DropdownButtonFormField(
-                value: _selectedValue,
-                hint: const Text(
-                  'choose one',
-                ),
-                isExpanded: true,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValue = value.toString();
-                  });
-                },
-                onSaved: (value) {
-                  setState(() {
-                    _selectedValue = value.toString();
-                  });
-                },
-                items: listOfValue.map((String val) {
-                  return DropdownMenuItem(
-                    value: val,
-                    child: Text(
-                      val,
-                    ),
-                  );
-                }).toList(),
+      appBar: AppBar(
+        actions: [
+          Expanded(
+            child: DropdownButtonFormField(
+              value: _selectedValue,
+              hint: const Text(
+                'choose one',
               ),
+              isExpanded: true,
+              onChanged: (value) {
+                setState(() {
+                  _selectedValue = value.toString();
+                });
+              },
+              onSaved: (value) {
+                setState(() {
+                  _selectedValue = value.toString();
+                });
+              },
+              items: listOfValue.map((String val) {
+                return DropdownMenuItem(
+                  value: val,
+                  child: Text(
+                    val,
+                  ),
+                );
+              }).toList(),
             ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-                child: QueryList(
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: QueryList(
               selectedValue: _selectedValue,
               testGraphQL: testGraphQL,
-            ))
-          ],
-        ));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

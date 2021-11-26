@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lab3/screens/feed_screen.dart';
+import 'package:lab3/screens/repository_screen.dart';
 
 void main() async {
   // Load personal github access token.
@@ -47,7 +48,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const FeedScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const FeedScreen(),
+        '/repo': (context) => const RepositoryScreen(),
+      },
     );
   }
 }

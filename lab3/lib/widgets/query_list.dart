@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:lab3/models/repository.dart';
 import 'list_card.dart';
 
 class QueryList extends StatelessWidget {
@@ -15,7 +16,7 @@ class QueryList extends StatelessWidget {
       options: QueryOptions(
         document: gql(testGraphQL),
         variables: {
-          "query": "stars:>100 languages:" + selectedValue,
+          "query": "stars:>1000 sort:stars language:" + selectedValue,
           "cursor": null
         },
       ),
@@ -35,14 +36,29 @@ class QueryList extends StatelessWidget {
           );
         }
 
-        final repoList = result.data?['search']['edges'];
-
+        List<Repository> repoList = [
+          ...result.data?['search']['edges'].map(
+            (data) {
+              return Repository(
+                name: data['node']['name'],
+                nameWithOwner: data['node']['nameWithOwner'],
+                description: data['node']['description'],
+                stargazerCount: data['node']['stargazerCount'],
+                forkCount: data['node']['forkCount'],
+                license: data['node']['licenseInfo'] == null
+                    ? "No license"
+                    : data['node']['licenseInfo']['spdxId'],
+                mainRefName: data['node']['defaultBranchRef']['name'],
+              );
+            },
+          ),
+        ];
         final Map pageInfo = result.data!['search']['pageInfo'];
         final String? endCursor = pageInfo['endCursor'];
 
         final fetchMoreOptions = FetchMoreOptions(
           variables: {
-            "query": "stars:>100 languages:" + selectedValue,
+            "query": "stars:>1000 sort:stars language:" + selectedValue,
             'cursor': endCursor
           },
           updateQuery: (previousResultData, fetchMoreResultData) {
@@ -69,13 +85,16 @@ class QueryList extends StatelessWidget {
                     )
                   : const SizedBox();
             }
-            var repo = repoList[index]['node'];
+            // final repo = repoList[index]['node'];
+            final repo = repoList[index];
+
             return ListCard(
-              title: repo['name'],
-              subtitle: repo['nameWithOwner'],
-              description: repo['description'],
-              stargazerCount: repo['stargazerCount'],
-              forkCount: repo['forkCount'],
+              title: repo.name,
+              subtitle: repo.nameWithOwner,
+              description: repo.description,
+              stargazerCount: repo.stargazerCount,
+              forkCount: repo.forkCount,
+              license: repo.license,
             );
           },
         );
