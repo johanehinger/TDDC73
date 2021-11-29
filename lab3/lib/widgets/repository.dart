@@ -18,39 +18,77 @@ class Repository extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            name,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          Text(
-            description,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text("License"),
-              Text(license),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text("Commits"),
-              Text(commits),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text("Branches"),
-              Text(branches),
-            ],
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              name,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(
+              height: 8.0,
+            ),
+            Text(
+              description,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Expanded(
+                        child: Center(
+                          child: Text("License"),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(license),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Expanded(
+                        child: Center(
+                          child: Text("Commits"),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(commits),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Center(
+                          child: Text("Branches"),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(branches),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Expanded(
+              child: SizedBox(),
+            ),
+          ],
+        ),
       ),
     );
   }
