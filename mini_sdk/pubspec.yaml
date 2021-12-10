@@ -8,6 +8,9 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  device_apps: ^2.1.1
+  android_intent: ^2.0.2
+  url_launcher: ^6.0.17
   flutter:
     sdk: flutter
 

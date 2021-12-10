@@ -42,8 +42,9 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Container(
               height: 400,
               child: SwishForm(
-                decoration: BoxDecoration(color: Colors.green),
-                swishButton: SwishButtonTypes.secondaryTextButton,
+                currencies: const ['NOK', 'USD', 'EUR'],
+                // decoration: BoxDecoration(color: Colors.green),
+                swishButton: SwishButtonTypes.primaryTextButton,
                 onSwishPress: () {
                   debugPrint("Swish!");
                 },

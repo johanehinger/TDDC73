@@ -2,6 +2,9 @@ library mini_sdk;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:device_apps/device_apps.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:android_intent/android_intent.dart';
 
 enum SwishButtonTypes {
   primaryElevatedButton,
@@ -11,23 +14,41 @@ enum SwishButtonTypes {
 }
 
 class SwishForm extends StatefulWidget {
-  SwishForm({
+  const SwishForm({
     Key? key,
     this.decoration,
-    this.inputDecoration,
+    InputDecoration? numberInputDecoration,
+    InputDecoration? amountInputDecoration,
+    InputDecoration? messageInputDecoration,
     this.hasAmount = true,
     this.hasMessage = true,
     this.hasCurrency = true,
     this.hasNumber = true,
     this.swishButton,
     required this.onSwishPress,
-  }) : super(key: key);
+    required this.currencies,
+  })  : _numberInputDecoration = numberInputDecoration ??
+            const InputDecoration(
+              label: Text("Phone Number"),
+            ),
+        _amountInputDecoration = amountInputDecoration ??
+            const InputDecoration(
+              label: Text("Amount"),
+            ),
+        _messageInputDecoration = messageInputDecoration ??
+            const InputDecoration(
+              label: Text("Message"),
+            ),
+        super(key: key);
+
+  final InputDecoration _numberInputDecoration;
+
+  final InputDecoration _amountInputDecoration;
+
+  final InputDecoration _messageInputDecoration;
 
   /// [decoration] dictates what type of decoration [SwishForm] should have.
   final BoxDecoration? decoration;
-
-  /// [inputDecoration] dictates what type of InputDecoration [SwishForm] should have.
-  final InputDecoration? inputDecoration;
 
   /// [hasNumber] dictates if [SwishForm] should contain a number field.
   /// Default is true.
@@ -49,7 +70,11 @@ class SwishForm extends StatefulWidget {
   /// If left null it will default to [SwishButtonTypes.primaryElevatedButton].
   final SwishButtonTypes? swishButton;
 
+  /// [onSwishPress] handles onPressed in [SwishButton].
   final Function onSwishPress;
+
+  /// The list of supported currencies. example: `['SEK', 'USD', 'EUR']`
+  final List<String> currencies;
 
   @override
   _SwishFormState createState() => _SwishFormState();
@@ -101,8 +126,7 @@ class _SwishFormState extends State<SwishForm> {
     }
   }
 
-  var items = ['SEK', 'USD', 'EUR'];
-  String? dropdowndefault = 'SEK';
+  String? dropdownvalue;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +137,7 @@ class _SwishFormState extends State<SwishForm> {
         children: [
           widget.hasNumber
               ? TextFormField(
-                  decoration: widget.inputDecoration,
+                  decoration: widget._numberInputDecoration,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(10)
@@ -126,10 +150,11 @@ class _SwishFormState extends State<SwishForm> {
               widget.hasAmount
                   ? Expanded(
                       child: TextFormField(
-                        decoration: widget.inputDecoration,
+                        decoration: widget._amountInputDecoration,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
+                        keyboardType: TextInputType.number,
                       ),
                     )
                   : const SizedBox(),
@@ -139,18 +164,18 @@ class _SwishFormState extends State<SwishForm> {
                       child: DropdownButtonFormField<String>(
                         decoration: const InputDecoration(
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          contentPadding: EdgeInsets.all(5),
+                          contentPadding: EdgeInsets.all(8.0),
                         ),
                         isExpanded: true,
-                        value: dropdowndefault,
+                        value: widget.currencies[0],
                         icon: const Icon(Icons.keyboard_arrow_down),
-                        items: items.map((String items) {
+                        items: widget.currencies.map((String items) {
                           return DropdownMenuItem(
                               value: items, child: Text(items));
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropdowndefault = newValue;
+                            dropdownvalue = newValue;
                           });
                         },
                       ),
@@ -160,7 +185,7 @@ class _SwishFormState extends State<SwishForm> {
           ),
           widget.hasMessage
               ? TextFormField(
-                  decoration: widget.inputDecoration,
+                  decoration: widget._messageInputDecoration,
                 )
               : const SizedBox(),
           getSwishButton(),
@@ -329,10 +354,32 @@ class SwishButton extends StatelessWidget {
         );
       case ButtonTypes.textButton:
         return TextButton(
-          onPressed: onPressed,
+          onPressed: () => openSwish(),
           child: _logo,
           style: _style,
         );
+    }
+  }
+
+  /// [openSwish] will try to open the installed Swish app. If no app is present it will
+  /// try to open Google Play Store. If that is not installed [openSwish] will throw a
+  /// error.
+  Future<void> openSwish() async {
+    const openSwishUrl = 'swish://';
+    const openPlayStoreSwish =
+        'https://play.google.com/store/apps/details?id=se.bankgirot.swish';
+    try {
+      AndroidIntent intent = const AndroidIntent(
+        action: 'action_view',
+        data: openSwishUrl,
+      );
+      await intent.launch();
+    } catch (e) {
+      if (await canLaunch(openPlayStoreSwish)) {
+        await launch(openPlayStoreSwish);
+      } else {
+        throw 'Could not open PlayStore';
+      }
     }
   }
 }
